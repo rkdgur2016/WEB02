@@ -59,7 +59,7 @@ public class BoardContoller extends HttpServlet implements ControllerV, PLog{
 		//request 인코딩 처리 :
 		req.setCharacterEncoding("UTF-8");
 		
-		String workDiv = StringUtil.nvl(req.getParameter("work_div"),"0");
+		String workDiv = StringUtil.nvl(req.getParameter("work_div"),"");
 		log.debug("workDiv : {}", workDiv);
 		
 		switch(workDiv) {
@@ -77,7 +77,7 @@ public class BoardContoller extends HttpServlet implements ControllerV, PLog{
 		log.debug("=====================");
 		log.debug("doRetrieve()");
 		log.debug("=====================");
-		HttpSession sesssion = req.getSession();
+		HttpSession session = req.getSession();
 		
 		SearchDTO inVO= new SearchDTO();
 		
@@ -85,13 +85,18 @@ public class BoardContoller extends HttpServlet implements ControllerV, PLog{
 		//page_size
 		String pageNo = StringUtil.nvl(req.getParameter("page_no"),"1");
 		String pageSize = StringUtil.nvl(req.getParameter("page_size"),"10");
+		String searchWord = StringUtil.nvl(req.getParameter("search_word"),"");
+		String searchDiv = StringUtil.nvl(req.getParameter("search_div"),"");
 		
 		log.debug("pageNO : {}", pageNo);
 		log.debug("pageSize : {}", pageSize);
+		log.debug("searchWord : {}", searchWord);
+		log.debug("searchDiv : {}", searchDiv);
 		
 		inVO.setPageNo(Integer.parseInt(pageNo));
 		inVO.setPageSize(Integer.parseInt(pageSize));
-		
+		inVO.setSearchWord(searchWord);
+		inVO.setSearchDiv(searchDiv);
 		log.debug("inVO : {}", inVO);
 		
 		//service call
@@ -105,6 +110,12 @@ public class BoardContoller extends HttpServlet implements ControllerV, PLog{
 		
 		//UI 데이터 전달
 		req.setAttribute("list", list);
+		
+		//검색 조건 UI로 전달
+		req.setAttribute("vo", inVO);
+		
+		
+		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/jsp/J02/board_list.jsp");
 		dispatcher.forward(req, res);
 	}

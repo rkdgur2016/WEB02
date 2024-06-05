@@ -1,14 +1,15 @@
 <%@page import="java.util.List"%>
 <%@page import="board.BoardDTO"%>
-<%@page import="board.SearchDTO"%>
+<%@page import="cmn.SearchDTO"%>
 <%@page import="board.BoardDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/cmn/common.jsp" %>
    <%
    List<BoardDTO> list = (List<BoardDTO>)request.getAttribute("list");   
-   
+   SearchDTO searchCon = (SearchDTO)request.getAttribute("vo");
    %>
+   searchCon:<%=searchCon %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +38,8 @@
 				<option value="40">제목 + 내용</option>
 				<option value="50">SEQ</option>
 			</select>
-			<input type="search" name="search_word" id="search_word" placeholder="검색어">
+			<input type="search" name="search_word" id="search_word" placeholder="검색어" 
+				value="<%if(null != searchCon){out.print(searchCon.getSearchWord());}%>">
 			<select name="page_size" id="page_size">
 				<option value="10">10페이지</option>
 				<option value="20">20페이지</option>
@@ -50,17 +52,17 @@
 	<table>
 		<thead>
   			<tr>
-    			<th>no</th> <th>제목</th> <th>등록자</th> <th>등록일</th> <th>조회수</th>
+    			<th>no</th> <th>제목</th>  <th>등록자</th> <th>등록일</th><th>조회수</th>
   			</tr>
 		</thead>
 		<tbody>
    			<%for(BoardDTO vo :list){ %>
   			<tr>
    				<td><%=vo.getSeq()%></td> 
-			   	<td><%=vo.getTitle()%></td> 
-			   	<td><%=vo.getReadCnt()%></td>
-			   	<td><%=vo.getModId()%></td> 
+			   	<td><%=vo.getTitle()%></td>  
+			   	<td><%=vo.getModId()%></td>  
 			   	<td><%=vo.getModDate()%></td> 
+			   	<td><%=vo.getReadCnt()%></td>
   			</tr>
   			<% } %>
 		</tbody>
@@ -69,6 +71,19 @@
 <script>
 	function doRetrieve(){
 		console.log("doRetrieve()");
+		
+		let frm = document.getElementById("board_frm");
+		frm.work_div.value = "doRetrieve";
+		frm.page_no.value = "1";
+		
+		console.log("frm.search_div.value : " + frm.search_div.value);
+		console.log("frm.search_word.value : " + frm.search_word.value);
+		console.log("frm.page_size.value : " + frm.page_size.value);
+		
+		console.log("frm.action : " +"<%=cPath%>"+"/board/board.do");
+		frm.action ="<%=cPath%>"+"/board/board.do";
+		frm.submit();
+		
 	}
 </script>
 </body>
